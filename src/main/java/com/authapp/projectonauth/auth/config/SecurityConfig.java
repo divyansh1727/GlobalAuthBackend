@@ -70,9 +70,13 @@ public class SecurityConfig {
                             var objectMapper = new ObjectMapper();
                             response.getWriter().write(objectMapper.writeValueAsString(apiError));
                         }).accessDeniedHandler(((request, response, e) -> {
+
+                            System.out.println("403 ERROR = " + e.getMessage());
+
                             response.setStatus(403);
                             response.setContentType("application/json");
-                            String message=e.getMessage();
+                            String message = e.getMessage();
+
                             String error=(String) request.getAttribute("error");
                             if (error != null) {
                                 message = error;

@@ -44,7 +44,12 @@ public class UserController {
     //update user
     //api/v1/users/{userId}
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable("userId") String userId) {
+    public ResponseEntity<UserDto> updateUser(
+            @RequestBody UserDto userDto,
+            @PathVariable("userId") String userId) {
+
+        System.out.println("========== UPDATE CONTROLLER HIT ==========");
+
         return ResponseEntity.ok(userService.updateUser(userDto, userId));
     }
 

@@ -11,7 +11,7 @@ public class AppConstants {
     };
 
     public static final String[] AUTH_ADMIN_URLS= {
-            "/api/v1/users/**"
+//            "/api/v1/users/**"
     };
     public static final String[] AUTH_GUEST_URLS= {
 
