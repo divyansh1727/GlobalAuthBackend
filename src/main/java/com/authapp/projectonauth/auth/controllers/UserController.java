@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -59,6 +62,16 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    //for the imageofprofile
+    @PostMapping("/{userId}/image")
+    public ResponseEntity<UserDto> uploadProfileImage(
+            @PathVariable String userId,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+
+        return ResponseEntity.ok(userService.updateProfileImage(userId, file));
     }
 
 }

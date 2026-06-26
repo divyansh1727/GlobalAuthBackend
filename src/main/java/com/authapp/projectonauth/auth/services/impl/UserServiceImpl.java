@@ -14,7 +14,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.UUID;
@@ -26,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
+    private final CloudinaryService cloudinaryService;
     private final RoleRepository roleRepository;
 
     @Override
@@ -124,5 +126,23 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public UserDto updateProfileImage(String userId, MultipartFile file) throws IOException {
+
+        UUID uId = UserHelper.parseUUID(userId);
+
+        User user = userRepository.findById(uId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        String imageUrl = cloudinaryService.uploadImage(file);
+
+        user.setImage(imageUrl);
+
+        User updatedUser = userRepository.save(user);
+
+        return modelMapper.map(updatedUser, UserDto.class);
     }
 }

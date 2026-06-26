@@ -1,6 +1,8 @@
 package com.authapp.projectonauth.auth.services;
 
 import com.authapp.projectonauth.auth.payload.UserDto;
+import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -21,6 +23,9 @@ public interface UserService {
 
     //get all users
     Iterable<UserDto> getAllUsers();
+
+    //to updateprofileimage
+    UserDto updateProfileImage(String userId, MultipartFile file) throws IOException;
 
     // user service se related __
 
