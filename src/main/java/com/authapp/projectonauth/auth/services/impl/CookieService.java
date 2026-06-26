@@ -22,7 +22,6 @@ public class CookieService {
             @Value("${security.jwt.refresh-token-cookie-name}") String refreshTokenCookieName,
             @Value("${security.jwt.cookie-http-only}") boolean cookieHttpOnly,
             @Value("${security.jwt.cookie-secure}") boolean cookieSecure,
-
             @Value("${security.jwt.cookie-same-site}") String cookieSameSite,
             @Value("${security.jwt.cookie-domain}") String cookieDomain
     ) {
@@ -31,6 +30,8 @@ public class CookieService {
         this.cookieSecure = cookieSecure;
         this.cookieDomain = cookieDomain;
         this.cookieSameSite = cookieSameSite;
+        logger.info("Cookie Config -> SameSite={}, Secure={}, Domain='{}'",
+                cookieSameSite, cookieSecure, cookieDomain);
     }
     public void attachRefreshCookie(HttpServletResponse response, String value, int maxAge) {
 
