@@ -105,6 +105,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     .expiredAt(Instant.now().plusSeconds(jwtService.getRefreshTtlSeconds()))
                     .build();
             refreshTokenRepository.save(refreshTokenOb);
+        System.out.println("LOGIN USER = " + user.getEmail());
+
+        System.out.println("ROLES COUNT = " + user.getRoles().size());
+
+        user.getRoles().forEach(role ->
+                System.out.println("ROLE = " + role.getName())
+        );
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user, refreshTokenOb.getJti());
             cookieService.attachRefreshCookie(response, refreshToken, (int) jwtService.getRefreshTtlSeconds());
