@@ -70,6 +70,9 @@ public class UserController {
             @PathVariable String userId,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
+        System.out.println("========== IMAGE CONTROLLER HIT ==========");
+        System.out.println("FILE NAME = " + file.getOriginalFilename());
+
 
         return ResponseEntity.ok(userService.updateProfileImage(userId, file));
     }

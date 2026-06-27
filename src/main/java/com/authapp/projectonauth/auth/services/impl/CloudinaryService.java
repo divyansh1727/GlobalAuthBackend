@@ -16,11 +16,13 @@ public class CloudinaryService {
     private final Cloudinary cloudinary;
 
     public String uploadImage(MultipartFile file) throws IOException {
+        System.out.println("Uploading to Cloudinary...");
 
         Map<?, ?> uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.emptyMap()
         );
+        System.out.println(uploadResult);
 
         return uploadResult.get("secure_url").toString();
     }
