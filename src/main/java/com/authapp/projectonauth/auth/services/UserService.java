@@ -1,7 +1,10 @@
 package com.authapp.projectonauth.auth.services;
 
+import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
 import com.authapp.projectonauth.auth.payload.UserDto;
 import java.io.IOException;
+
+import org.apache.coyote.BadRequestException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -28,6 +31,8 @@ public interface UserService {
     UserDto updateProfileImage(String userId, MultipartFile file) throws IOException;
 
     // user service se related __
+    void changePassword(String userId, ChangePasswordRequest request);
+
 
 
 }

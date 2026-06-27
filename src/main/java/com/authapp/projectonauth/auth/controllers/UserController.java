@@ -1,6 +1,7 @@
 package com.authapp.projectonauth.auth.controllers;
 
 import com.authapp.projectonauth.auth.config.AppConstants;
+import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
 import com.authapp.projectonauth.auth.payload.UserDto;
 import com.authapp.projectonauth.auth.services.UserService;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
 
 import java.io.IOException;
 
@@ -76,5 +78,12 @@ public class UserController {
 
         return ResponseEntity.ok(userService.updateProfileImage(userId, file));
     }
-
+    @PostMapping("/{userId}/change-password")
+    public ResponseEntity<String> changePassword(
+            @PathVariable String userId,
+            @RequestBody ChangePasswordRequest request
+    ) {
+        userService.changePassword(userId, request);
+        return ResponseEntity.ok("Password changed successfully");
+    }
 }

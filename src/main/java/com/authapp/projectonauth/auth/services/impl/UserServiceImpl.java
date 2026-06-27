@@ -1,6 +1,7 @@
 package com.authapp.projectonauth.auth.services.impl;
 
 import com.authapp.projectonauth.auth.config.AppConstants;
+import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
 import com.authapp.projectonauth.auth.payload.UserDto;
 import com.authapp.projectonauth.auth.entities.Provider;
 import com.authapp.projectonauth.auth.entities.Role;
@@ -13,6 +14,7 @@ import com.authapp.projectonauth.auth.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final CloudinaryService cloudinaryService;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -144,5 +147,30 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.save(user);
 
         return modelMapper.map(updatedUser, UserDto.class);
+    }
+    @Override
+    @Transactional
+    public void changePassword(String userId, ChangePasswordRequest request) {
+
+        UUID uId = UserHelper.parseUUID(userId);
+
+        User user = userRepository.findById(uId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getProvider() != Provider.LOCAL) {
+            throw new IllegalArgumentException(
+                    "Password cannot be changed for OAuth accounts");
+        }
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("New password and confirm password do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
     }
 }
