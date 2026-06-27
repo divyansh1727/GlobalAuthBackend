@@ -1,6 +1,7 @@
 package com.authapp.projectonauth.auth.services;
 
 import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
+import com.authapp.projectonauth.auth.payload.DeleteAccountRequest;
 import com.authapp.projectonauth.auth.payload.UserDto;
 import java.io.IOException;
 
@@ -32,6 +33,9 @@ public interface UserService {
 
     // user service se related __
     void changePassword(String userId, ChangePasswordRequest request);
+
+    //to delete the user
+    void deleteAccount(String userId, DeleteAccountRequest request);
 
 
 

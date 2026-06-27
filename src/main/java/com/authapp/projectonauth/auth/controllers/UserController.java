@@ -2,6 +2,7 @@ package com.authapp.projectonauth.auth.controllers;
 
 import com.authapp.projectonauth.auth.config.AppConstants;
 import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
+import com.authapp.projectonauth.auth.payload.DeleteAccountRequest;
 import com.authapp.projectonauth.auth.payload.UserDto;
 import com.authapp.projectonauth.auth.services.UserService;
 import lombok.AllArgsConstructor;
@@ -85,5 +86,13 @@ public class UserController {
     ) {
         userService.changePassword(userId, request);
         return ResponseEntity.ok("Password changed successfully");
+    }
+    @DeleteMapping("/{userId}/delete-account")
+    public ResponseEntity<String> deleteAccount(
+            @PathVariable String userId,
+            @RequestBody DeleteAccountRequest request
+    ) {
+        userService.deleteAccount(userId, request);
+        return ResponseEntity.ok("Account deleted successfully");
     }
 }

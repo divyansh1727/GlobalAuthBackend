@@ -2,10 +2,12 @@ package com.authapp.projectonauth.auth.services.impl;
 
 import com.authapp.projectonauth.auth.config.AppConstants;
 import com.authapp.projectonauth.auth.payload.ChangePasswordRequest;
+import com.authapp.projectonauth.auth.payload.DeleteAccountRequest;
 import com.authapp.projectonauth.auth.payload.UserDto;
 import com.authapp.projectonauth.auth.entities.Provider;
 import com.authapp.projectonauth.auth.entities.Role;
 import com.authapp.projectonauth.auth.entities.User;
+import com.authapp.projectonauth.auth.repositories.RefreshTokenRepository;
 import com.authapp.projectonauth.exceptions.ResourceNotFoundException;
 import com.authapp.projectonauth.auth.helpers.UserHelper;
 import com.authapp.projectonauth.auth.repositories.RoleRepository;
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final CloudinaryService cloudinaryService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     @Transactional
@@ -172,5 +175,30 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepository.save(user);
+    }
+    @Override
+    @Transactional
+    public void deleteAccount(String userId, DeleteAccountRequest request) {
+
+        UUID uId = UserHelper.parseUUID(userId);
+
+        User user = userRepository.findById(uId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // LOCAL account -> verify password
+        if (user.getProvider() == Provider.LOCAL) {
+
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                throw new IllegalArgumentException("Incorrect password");
+            }
+        }
+
+        // TODO: Delete Cloudinary image (next step)
+
+        // TODO: Delete refresh tokens
+        refreshTokenRepository.deleteByUser(user);
+
+        // Delete user
+        userRepository.delete(user);
     }
 }
